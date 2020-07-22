@@ -1,0 +1,415 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="it">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>UNIFI COVER CROPPER</title>
+
+
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.js"></script>
+
+
+  <style>
+    /* LAYOUT */
+
+    /* questo è richiesto da cropperJS */
+    img.cropper {
+      display: block;
+      max-width: 100%;
+    }
+
+    .flex {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .wrapper {
+      margin: 20px
+    }
+
+    div.cropper-container {
+      max-width: 500px;
+    }
+
+    img.preview {
+      height: 200px;
+    }
+
+    div.preview-container {
+      position: relative;
+      float: left;
+    }
+
+    .imagemask {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #alert {
+      font-weight: bold;
+      color: red;
+    }
+
+    #alert,
+    #download_link {
+      display: none;
+    }
+  </style>
+
+
+  <!-- GRAPHIC STYLES -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.3.0/milligram.min.css" rel="stylesheet">
+  <style>
+    img {
+      max-width: none;
+    }
+
+    .button.button-outline {
+      color: black;
+      border-color: black;
+      font-size: .8rem;
+      height: 2.8rem;
+      line-height: 2.8rem;
+      padding: 0 1.5rem;
+    }
+
+    a,
+    a:visited {
+      color: blue;
+    }
+
+    button a,
+    button a:visited {
+      color: black;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+
+
+
+
+
+  <div class="wrapper">
+
+    <h1>
+      Unifi Cover Cropper (Beta)
+    </h1>
+    <p>
+      Utility per la creazione di immagini di copertina per i siti dei dipartimenti di <a href="http://www.unifi.it">unifi.it</a> <br>
+      (output richiesto: jpg 1920x960px &lt;300kb)
+    </p>
+    <hr>
+
+    <div class="flex">
+      <div>
+        <p>
+          <button id="open-thumbnails-button" class="button button-outline">
+            Seleziona un'immagine dai preset
+          </button>
+          &nbsp
+      </div>
+      <div>
+        oppure carica un'immagine: <input id="image_loader" type=file>
+        </p>
+      </div>
+      <div>
+        <p> In alternativa cerca altre immagini su <a href="https://www.pexels.com/it-it/">Pexels.com</a></p>
+      </div>
+    </div>
+  </div>
+
+
+
+
+    <!-- Wrap the image or canvas element with a block element (container) -->
+
+    <div class="flex">
+
+      <div class="wrapper" id="cropper_wrapper">
+        <div class="cropper-container">
+          <img class="cropper" id="image" src="sample_uno.jpg">
+        </div>
+        <p>
+          Risoluzione origine: <span id="info"> </span> &nbsp
+          <br>
+          <a href="#" id="download_link" download="cropped.jpg">SCARICA IMMAGINE RITAGLIATA</a>
+          <span id="alert">RISOLUZIONE TROPPO BASSA</span>
+      </div>
+
+      <div class="wrapper" id="anteprima_wrapper">
+
+        <div class="preview-container">
+          <img class="preview" id="result_mobile">
+          <img src="./mobilemask.png" class="imagemask">
+        </div>
+        <p> anteprima versione mobile</p>
+
+        <div class="preview-container">
+          <img class="preview" id="result_desktop"><br>
+          <img src="./desktopmask.png" class="imagemask">
+        </div>
+        <p> anteprima versione desktop</p>
+
+        <div class="preview-container">
+          <img class="preview" id="result_largescreen">
+          <img src="./largescreenmask.png" class="imagemask">
+        </div>
+        <p> anteprima versione schermi grandi</p>
+
+      </div>
+    </div> <!-- flexbox container -->
+
+
+    <div class="thumbnails-container">
+      <button id="close-thumbnails-button" class="button button-outline">X</button>
+      <div class="thumbnails-wrapper">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-1.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-2.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-3.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-4.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-5.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-6.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-7.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-8.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-9.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-10.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-11.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-12.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-13.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-biomedica-14.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-1.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-2.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-3.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-4.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-5.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-6.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-7.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-8.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-9.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-10.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-11.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-12.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-13.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-14.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-15.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-16.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-17.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-18.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-19.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-20.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scientifica-21.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-1.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-2.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-3.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-4.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-5.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-6.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-7.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-8.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-9.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-10.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-11.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-12.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-13.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-14.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-15.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-16.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-17.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-18.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-19.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-20.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-21.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-22.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-23.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-24.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-25.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-26.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-27.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-28.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-29.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-30.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-31.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-32.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-tecnologica-33.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-1.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-2.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-3.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-4.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-5.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-6.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-7.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-8.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-9.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-10.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-11.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-12.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-13.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-14.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-15.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-16.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-scienze-sociali-17.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-1.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-2.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-3.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-4.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-5.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-6.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-7.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-8.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-9.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-10.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/area-umanistica-formazione-11.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-1.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-2.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-3.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-4.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-5.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-6.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-7.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-8.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-9.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-11.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-12.jpg" class="thumbnail">
+        <img src="https://img.didacommunicationlab.it/300/https://unifi-cover.didacommunicationlab.it/presets/studio-13.jpg" class="thumbnail">
+      </div>
+    </div>
+
+        <div id="loading">
+          loading...
+        </div>
+
+        <style>
+        .thumbnails-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          padding: 40px;
+          background-color: white;
+        }
+        .thumbnail {
+          height: 150px;
+        }
+        #close-thumbnails-button {
+          position: absolute;
+          right: 10px;
+          top: 10px;
+        }
+        #loading {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          background-color: #eee;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        </style>
+
+        <script type="text/javascript">
+          let openThumbnails = function() {
+            document.querySelector(".thumbnails-container").style.display = "block";
+          }
+          let closeThumbnails = function() {
+            document.querySelector(".thumbnails-container").style.display = "none";
+          }
+
+          document.querySelector("#open-thumbnails-button").addEventListener('click', openThumbnails);
+          document.querySelector("#close-thumbnails-button").addEventListener('click', closeThumbnails);
+
+          document.querySelectorAll('.thumbnail').forEach(item => {
+            item.addEventListener('click', function(event) {
+              url = event.target.src.replace('https://img.didacommunicationlab.it/300/','');
+              cropper.replace(url);
+              closeThumbnails();
+            });
+          });
+
+          closeThumbnails()
+
+          window.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('#loading').style.display = "none";
+          }, false);
+
+
+
+        // import 'cropperjs/dist/cropper.css';
+
+        const image_loader = document.querySelector('#image_loader')
+        const image = document.querySelector('#image')
+        const preview = document.querySelector('#preview')
+        const result_desktop = document.querySelector('#result_desktop')
+        const result_mobile = document.querySelector('#result_mobile')
+        const result_largescreen = document.querySelector('#result_largescreen')
+        const download_link = document.querySelector('#download_link')
+
+
+        image_loader.addEventListener('change', function() {
+          let file = image_loader.files[0];
+          let url = URL.createObjectURL(file);
+          cropper.replace(url);
+        });
+
+        const cropper = new Cropper(image, {
+          aspectRatio: 2000 / 1000, // size of output image
+          viewMode: 1, // restricts crop area to image area
+          preview: preview,
+          autoCropArea: 1,
+          movable: false,
+          zoomable: false,
+          toggleDragModeOnDblclick: false,
+
+
+          crop(event) {
+            console.log(event.detail.width);
+            console.log(event.detail.height);
+            clearTimeout();
+            setTimeout(doCrop, 500);
+          },
+        });
+
+        const doCrop = function() {
+          document.querySelector("#alert").style.display = "none";
+          download_link.style.display = "none";
+
+          let data = cropper.getData(true);
+          document.querySelector("#info").innerHTML = data.width + "x" + data.height + "px";
+
+          if (data.width < 1700) {
+            document.querySelector("#alert").style.display = "inline";
+          } else {
+            download_link.style.display = "inline";
+          }
+
+          let blob = cropper.getCroppedCanvas({
+            // options
+            maxWidth: 1920
+          }).toBlob(function(blob) {
+              url = URL.createObjectURL(blob);
+              result_desktop.src = url;
+              result_mobile.src = url;
+              result_largescreen.src = url;
+              download_link.href = url;
+            }, 'image/jpeg', 0.7 // image type and quality
+          );
+
+        }
+      </script>
+
+</body>
+
+</html>
